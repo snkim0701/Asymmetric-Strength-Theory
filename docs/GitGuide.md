@@ -18,6 +18,7 @@ VS Code에서 Open Folder
     ↓
 프로젝트 개발
     ↓
+git status
 git add .
 git commit -m "..."
 git push
