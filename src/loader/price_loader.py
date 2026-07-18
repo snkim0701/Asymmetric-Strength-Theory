@@ -28,11 +28,14 @@ def load_price(ticker, start, end):
     -------
     pandas.DataFrame
     """
+    try:
+        df = fdr.DataReader(ticker, start, end)
 
-    df = fdr.DataReader(
-        ticker,
-        start,
-        end
-    )
+        if df.empty:
+            print(f"[Warning] No data : {ticker}")
 
-    return df
+        return df
+
+    except Exception as e:
+        print(f"[Error] {ticker} : {e}")
+        return None
