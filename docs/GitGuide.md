@@ -39,3 +39,21 @@ cd /d D:\Github
 D: 
 cd \Github
 
+### V1.3 완료
+Asymmetric-Strength-Theory
+
+V1.1
+ ├── Project Structure
+ ├── WATCHLIST
+ └── GitHub
+
+V1.2
+ ├── price_loader.py
+ └── test_price_loader.py
+
+V1.3
+ ├── flow_loader.py
+ ├── test_flow_loader.py
+ ├── Data Standardization
+ ├── Column Mapping
+ └── Numeric Conversion
