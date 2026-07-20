@@ -11,10 +11,13 @@ Version: V1.4
 from __future__ import annotations
 
 import pandas as pd
+import warnings
+
 
 from src.loader.price_loader import load_price
 from src.loader.flow_loader import load_flow
 
+warnings.simplefilter('ignore')
 
 def load_dataset(
     ticker: str,
@@ -40,8 +43,14 @@ def load_dataset(
         start=start,
         end=end,
         max_pages=40,
+    #    verbose=False,
     )
 
+    #if verbose:
+    #    print(verbosal)
+    
+
+        
     #-------------------------
     # Validate
     #-------------------------
