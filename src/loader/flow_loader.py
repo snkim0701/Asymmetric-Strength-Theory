@@ -232,17 +232,37 @@ def clean_flow(df):
 
             df[col] = df[col].astype("Int64")
 
-    return df
+    # Remove duplicated dates
+    df = (
+        df.drop_duplicates(subset="Date")
+        .sort_values("Date")
+        .reset_index(drop=True)
+    )        
 
+    # Keep only HDSDM columns
+    columns = [
+        "Date",
+        "Institution",
+        "Foreign",
+        "ForeignShares",
+        "ForeignRatio",
+    ]
+
+    df = df[columns]
+
+    return df
 
 # =========================================================
 # Public API
 # =========================================================
 
 def load_flow(
-        ticker,
-        max_pages=5
-):
+        ticker: str,
+        start: str | None = None,
+        end: str | None = None,
+        max_pages=40,
+    ):
+
 
     df = get_data_parallel(
         ticker,
@@ -250,8 +270,46 @@ def load_flow(
     )
 
     if df.empty:
-        return df
+        return pd.DataFrame(
+            columns=[
+                "Date",
+                "Institution",
+                "Foreign",
+                "ForeignShares",
+                "ForeignRatio",
+            ]
+        )
+    
+
 
     df = clean_flow(df)
+
+    print("=" * 60)
+    print("Flow BEFORE date filter")
+    print(f"Rows : {len(df)}")
+    print(f"Min  : {df['Date'].min()}")
+    print(f"Max  : {df['Date'].max()}")
+
+
+    if start is not None:
+        df = df[df["Date"] >= pd.to_datetime(start)]
+
+    if end is not None:
+        df = df[df["Date"] <= pd.to_datetime(end)]
+    print("=" * 60)
+    print("Flow AFTER date filter")
+    print(f"Rows : {len(df)}")
+
+    if not df.empty:
+        print(f"Min  : {df['Date'].min()}")
+        print(f"Max  : {df['Date'].max()}")
+
+
+    df = (
+        df.drop_duplicates(subset="Date")
+        .sort_values("Date")
+        .reset_index(drop=True)
+    )
+
 
     return df

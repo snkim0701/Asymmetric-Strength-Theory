@@ -1,41 +1,51 @@
 """
 Asymmetric Strength Theory
 Module : Price Loader
-
-Author : Seungnam Kim
-Version : 1.1
 """
 
+from __future__ import annotations
+
+import pandas as pd
 import FinanceDataReader as fdr
 
 
-def load_price(ticker, start, end):
+def load_price(
+    ticker: str,
+    start: str,
+    end: str,
+) -> pd.DataFrame:
     """
-    Load price data from FinanceDataReader
-
-    Parameters
-    ----------
-    ticker : str
-        Stock ticker (e.g. '005930')
-
-    start : str
-        Start date (YYYY-MM-DD)
-
-    end : str
-        End date (YYYY-MM-DD)
-
-    Returns
-    -------
-    pandas.DataFrame
+    Load price data from FinanceDataReader.
     """
+
     try:
-        df = fdr.DataReader(ticker, start, end)
+
+        df = fdr.DataReader(
+            ticker,
+            start,
+            end,
+        )
 
         if df.empty:
-            print(f"[Warning] No data : {ticker}")
+
+            print(f"[Warning] No price data : {ticker}")
+            return pd.DataFrame()
+
+        # Date → column
+        df = (
+            df.reset_index()
+              .sort_values("Date")
+              .drop_duplicates("Date")
+              .reset_index(drop=True)
+        )
+
+        # datetime
+        df["Date"] = pd.to_datetime(df["Date"])
 
         return df
 
     except Exception as e:
+
         print(f"[Error] {ticker} : {e}")
-        return None
+
+        return pd.DataFrame()
